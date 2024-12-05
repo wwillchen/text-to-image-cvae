@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class ConvVAE(nn.Module):
+class BaselineConvVAE(nn.Module):
     def __init__(self, latent_dim=128, text_embedding_dim=768):
-        super(ConvVAE, self).__init__()
+        super(BaselineConvVAE, self).__init__()
 
         self.latent_dim = latent_dim
         self.text_embedding_dim = text_embedding_dim
