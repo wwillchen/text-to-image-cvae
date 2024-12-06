@@ -20,10 +20,10 @@ dataset = CocoDataset(
     root_dir='coco/images/train2017',
     annotation_file='coco/images/annotations/captions_train2017.json',
     transform=transform,
-    fraction=0.3
+    fraction=0.05
 )
 
-dataloader = DataLoader(dataset, batch_size=64, shuffle=True, num_workers=4)
+dataloader = DataLoader(dataset, batch_size=128, shuffle=True, num_workers=4)
 
 latent_dim = 128
 text_embedding_dim = 768  # BERT embedding size
@@ -69,5 +69,10 @@ with open(log_file, "w") as f:
         print(f"Epoch [{epoch + 1}/{num_epochs}] - Loss: {avg_loss:.4f} ")
 
         # Save a sampled image every other epoch
-        if (epoch + 1) % 2 == 0:
+        if (epoch + 1) % 1 == 0:
             sample_and_save(cvae, captions_batch, epoch + 1, device)
+                 
+save_dir = "model_weights"
+os.makedirs(save_dir, exist_ok=True)
+
+torch.save(vae.state_dict(), os.path.join(save_dir, "vae_weights.pth"))
