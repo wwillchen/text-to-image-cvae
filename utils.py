@@ -1,6 +1,8 @@
 import torchvision.utils as vutils
 from matplotlib import pyplot as plt
 import torch
+import torchvision.transforms as transforms
+from PIL import Image
 import os
 
 def sample_and_save(vae, captions, epoch, device, output_dir="samples"):
@@ -28,7 +30,8 @@ def sample_and_save(vae, captions, epoch, device, output_dir="samples"):
     with torch.no_grad():
         generated_images = vae.decode(z, selected_caption)
         
-    generated_images = generated_images.clamp(0, 1)
+    generated_images = (generated_images.clamp(0, 1) * 255).to(torch.uint8)
 
     image_path = os.path.join(output_dir, f"sample_epoch_{epoch}.png")
-    vutils.save_image(generated_images[0], image_path)
+    pil_image = transforms.ToPILImage()(generated_images[0]) 
+    pil_image.save(image_path)  

@@ -16,11 +16,14 @@ transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
+save_dir = "model_weights"
+os.makedirs(save_dir, exist_ok=True)
+
 dataset = CocoDataset(
     root_dir='coco/images/train2017',
     annotation_file='coco/images/annotations/captions_train2017.json',
     transform=transform,
-    fraction=0.05
+    fraction=0.3
 )
 
 dataloader = DataLoader(dataset, batch_size=128, shuffle=True, num_workers=4)
@@ -71,8 +74,5 @@ with open(log_file, "w") as f:
         # Save a sampled image every other epoch
         if (epoch + 1) % 1 == 0:
             sample_and_save(cvae, captions_batch, epoch + 1, device)
-                 
-save_dir = "model_weights"
-os.makedirs(save_dir, exist_ok=True)
-
-torch.save(vae.state_dict(), os.path.join(save_dir, "vae_weights.pth"))
+        
+        torch.save(cvae.state_dict(), os.path.join(save_dir, f"vae_weights_iter{epoch}.pth"))
